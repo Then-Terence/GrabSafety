@@ -160,6 +160,19 @@ between stops where the car has picked up a very small amount of speed
 (around 0.1 to 0.2). For the purpose of practicality, those points
 should still be considered stops.
 
+After defining stops, we can define the points where the stops start or
+end.
+
+Start of Stop:
+
+1.  Having the status “Stop” for the current second but not the previous
+    second.
+
+End of Stop:
+
+1.  Having the status “Stop” for the current second but not the next
+    second.
+
 Local Minimum:
 
 1.  Speed less than Speed (Lag 1 to 3) and Speed (Lead 1 to 3); OR
@@ -168,21 +181,179 @@ Local Minimum:
 3.  Speed less than Speed (Lead 1 to 3) and Speed (Lag 1 to 3) are not
     available
 
-\[Lead 1 through 3, Lag 1 through 3, Local Min, Local Max, Stop\]
+Local Maximum:
 
-Some Visualizations
--------------------
+1.  Speed greater than Speed (Lag 1 to 3) and Speed (Lead 1 to 3); OR
+2.  Speed greater than Speed (Lag 1 to 3) and Speed (Lead 1 to 3) are
+    not available; OR
+3.  Speed greater than Speed (Lead 1 to 3) and Speed (Lag 1 to 3) are
+    not available
+
+Accelerating:
+
+1.  Speed greater than Speed (Lag 1 to 3) AND Speed less than Speed
+    (Lead 1 to 3)
+
+Decelerating:
+
+1.  Speed less than Speed (Lag 1 to 3) AND Speed greater than Speed
+    (Lead 1 to 3)
+
+Other than that, I have discovered some possible anomalies within the
+data, where at certain points the Speed are shown to be exactly -1m/s,
+and there do not seem to be any smooth transition to and from that speed
+a few seconds before and after. This is highly unusual.
+
+Among those data points with Speed equals to -1m/s, a very high amount
+has the Bearing reading of exactly 0 as well, which seems odd and could
+contain some information not immediately apparent.
+
+As such, I have also defined the following:
+
+Anomaly1: Speed equals to -1 Anomaly2: Speed equals to -1 AND Bearing
+equals to 0
+
+Data points with tags of Anomaly1 and Anomaly2 are not used in computing
+the features.
+
+Phase-based Features
+--------------------
+
+Based on the six phases defined in the previous section, some features
+can be engineered.
+
+### Local Minimum, Local Maximum
+
+For the phases of Local Minimum and Local Maximum, I have aggregated the
+Speed from 3 seconds before to 3 seconds after by:
+
+1.  Mean
+2.  Standard Deviation
+3.  Maximum
+
+This results in 42 features (2 phases \* 7 seconds \* 3 aggregations).
+
+### Start of Stop
+
+For the phase of Start of Stop, I have aggregated the Speed from 3
+seconds before by:
+
+1.  Mean
+2.  Standard Deviation
+3.  Maximum
+
+This results in 9 features (1 phase \* 3 seconds \* 3 aggregations).
+
+### End of Stop
+
+For the phase of End of Stop, I have aggregated the Speed from 3 seconds
+after by:
+
+1.  Mean
+2.  Standard Deviation
+3.  Maximum
+
+This results in 9 features (1 phase \* 3 seconds \* 3 aggregations).
+
+### Accelerating, Decelerating
+
+For the phases of Accelerating and Decelerating, there are more data
+fields that will give meaningful insights, especially since there are
+three axes for acceleration and gyrometer readings. Some of the axes can
+be combined into a new field. For the purpose of brevity, I have used
+“acc” in place of “acceleration”.
+
+We have computed the following new fields:
+
+acc\_xy = sqrt((acc\_x) ^ 2 + (acc\_y) ^ 2) acc\_xyz = sqrt((acc\_x) ^ 2
++ (acc\_y) ^ 2 + (acc\_z) ^ 2)
+
+The acceleration for the plane xy and xyz can be computed by the
+formulas above, by the virtue of Pythagoras’ Theorem.
+
+The acceleration for the plane xy essentially takes into account both
+the acceleration to the front / back and left / right, whereas plane xyz
+takes into account up / down as well.
+
+While accelerating / decelerating fast is bad enough for dangerous
+driving, the rate of change of acceleration or gyrometer reading will be
+much worse. To compute (approximate) the rate of change of acceleration
+and gyrometer reading, I have taken the first difference of the value.
+
+For example:
+
+At time t - 1, acc\_x = 0.2m/s2 At time t, acc\_x = 0.5m/s2
+
+At time t, the first difference of acc\_x = (0.5m/s2 - 0.2m/s2) / (1s) =
+0.3m/s3
+
+I have aggregated the following fields:
+
+1.  acc (x, y, z, xy, xyz)
+2.  gyro (x, y, z)
+
+by their values and first differences, by:
+
+1.  mean
+2.  max
+3.  sd
+
+This results in 96 features (2 phases \* 8 fields \* 2 (value at current
+second, first difference) \* 3 aggregations).
+
+There is a total of 156 phase-based features.
+
+Non Phase-based Features
+------------------------
+
+On top of the features described above, I have computed some features
+not based on the phases.
+
+Duration (computed as max(second) + 1, since it starts with 0) No. of
+Local Minima No. of Local Maxima No. of Stops Duration of Stops No. of
+Anomaly1 No. of Anomaly2
+
+Other than that, the finding from Accuracy is that it clusters around
+some common values. The 10 most common values are:
+
+3, 3.9, 4, 5, 6, 8, 10, 12, 16, 32
+
+When the car is at a stop, the highly common value is only 3.
+
+I have calculated, for each bookings, the proportion of the duration
+that it shows such readings. The reasoning is that such values could be
+common by default, when the car is moving at a steady pace, that the
+readings only diverge from these common values when the speed /
+acceleration of the car is fluctuating a lot.
+
+This results in 11 features (10 common values, Accuracy of 3 when the
+car is at stop).
+
+I have also calculated the first difference of the Accuracy, and
+aggregate by:
+
+1.  Mean
+2.  Standard Deviation
+3.  Max
+
+All in all, there are 21 non phase-based features.
+
+All the 177 features can be found in the file \[…\], along with their
+names and descriptions.
 
 Model Training
 ==============
 
-Based on the features, I have trained a model using the XGB algorithm.
-
-Parameter Tuning
-----------------
+Based on the features, I have trained a model using the XGBoost
+algorithm.
 
 In order to get the optimal results, some parameters for the algorithm
 have to be tuned. This is done by using cross-validation.
+
+I have used the data split of 90% for training, and 10% for testing.
+
+Parameter Tuning
+----------------
 
 As a Grid Search will be very time and memory consuming, I have opted to
 tune the parameters one at a time, while keeping the other parameters at
@@ -190,31 +361,66 @@ their default values.
 
 ### Learning Parameters
 
-The parameters which I have tuned are:
+The learning parameters for XGBoost which I have tuned are:
 
-eta: \[What is eta?\]
+eta: the learning rate of the algorithm
 
-maximum\_depth
+maximum\_depth (md): the maximum depth of the trees trained by the
+algorithm
 
-subsample
+subsample (ss): the subsample of rows used to evaluate the splits of
+trees in the algorithm
 
-colsaple\_by\_tree
+colsample\_by\_tree (cs): the sample of columns (features) considered
+whenever the algorithm builds a new tree
 
-As we can see from the plots above, even when using the same algorithm,
-the parameters can have a significant effect on the model training.
+![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-3-1.png)![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-3-2.png)![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-3-3.png)![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-3-4.png)
+
+My aim is to allow the algorithm to achieve a good amount of accuracy
+without putting it too much at risk of overfitting. I have chosen the
+following values for the parameters:
+
+eta: 0.05
+
+maximum\_depth (md): 2
+
+subsample (ss): 0.75
+
+colsample\_by\_tree (cs): 0.75
 
 ### Number of Features
 
+After deciding on the learning parameters, a preliminary model is built
+to assess the importance of the features. This is because to prevent
+overfitting, I do not want to include too much a number of features
+which may or may not improve the performance of the model, or even
+worsen the accuracy.
+
+In the following plot, I show the cross-validation AUC results by
+reducing the number of features, ranging from 20 to 100, from the full
+set of 177 features.
+
+![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+From the plot, using 80 features would give sufficient accuracy. Beyond
+that, the risk of overfitting seems more concerning.
+
 ### Number of Rounds
 
-Another obvious thing is that after a certain number of iterations, the
-performance may actually deteriorate. Therefore, the number of
-iterations in model training has to be tuned as well. \[after having the
-parameters tuned\] The results are shown in the plot below.
+Finally, after deciding on both the learning parameters and number of
+features to be used, the number of rounds of training should still be
+decided.
 
-\[plot for iteration\]
+![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+From the plot shown above, and the evaluation log, the maximum cross
+validation AUC is reach at iteration number 85. Therefore, the final
+model will be limited to only 85 rounds.
 
 Results
 =======
 
-\[AUC Plot, Figure\] \[How to use the model?\]
+The resulting model has an AUC of 0.7181 on the 10% holdout testing set.
+The ROC curve is shown below.
+
+![](Grab_AI_For_SEA_-_Safety_files/figure-markdown_strict/unnamed-chunk-6-1.png)
