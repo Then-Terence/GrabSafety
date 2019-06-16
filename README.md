@@ -28,9 +28,13 @@ Based on the fields in the telematics data, feature engineering has to be conduc
 
 Based on the features, I have trained a model using the XGB algorithm.
 
+## Parameter Tuning
+
 In order to get the optimal results, some parameters for the algorithm have to be tuned. This is done by using cross-validation.
 
 As a Grid Search will be very time and memory consuming, I have opted to tune the parameters one at a time, while keeping the other parameters at their default values.
+
+### Learning Parameters
 
 The parameters which I have tuned are:
 
@@ -42,11 +46,20 @@ subsample
 
 colsaple_by_tree
 
-As we can see from the plots above, even when using the same algorithm, the parameters can have a significant effect on the model training. Another obvious thing is that after a certain number of iterations, the performance may actually deteriorate. Therefore, the number of iterations in model training has to be tuned as well. [after having the parameters tuned] The results are shown in the plot below.
+As we can see from the plots above, even when using the same algorithm, the parameters can have a significant effect on the model training.
+
+### Number of Features
+
+
+### Number of Rounds
+
+Another obvious thing is that after a certain number of iterations, the performance may actually deteriorate. Therefore, the number of iterations in model training has to be tuned as well. [after having the parameters tuned] The results are shown in the plot below.
 
 [plot for iteration]
 
 
 # Results
 
-[AUC Plot]
+[AUC Plot, Figure]
+[How to use the model?]
+
