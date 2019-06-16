@@ -1,178 +1,178 @@
-Feature,Description,Method of Aggregation,,
-acc_x_Dec_mean,acceleration on x-axis during decelerating phase,mean,,
-acc_y_Dec_mean,acceleration on y-axis during decelerating phase,mean,,
-acc_z_Dec_mean,acceleration on z-axis during decelerating phase,mean,,
-acc_xy_Dec_mean,acceleration on xy-plane during decelerating phase,mean,,
-acc_xyz_Dec_mean,acceleration on xyz-plane during decelerating phase,mean,,
-gyro_x_Dec_mean,gyrometer reading on x-axis during decelerating phase,mean,,
-gyro_y_Dec_mean,gyrometer reading on y-axis during decelerating phase,mean,,
-gyro_z_Dec_mean,gyrometer reading on z-axis during decelerating phase,mean,,
-acc_x_Dec_sd,acceleration on x-axis during decelerating phase,sd,,
-acc_y_Dec_sd,acceleration on y-axis during decelerating phase,sd,,
-acc_z_Dec_sd,acceleration on z-axis during decelerating phase,sd,,
-acc_xy_Dec_sd,acceleration on xy-plane during decelerating phase,sd,,
-acc_xyz_Dec_sd,acceleration on xyz-plane during decelerating phase,sd,,
-gyro_x_Dec_sd,gyrometer reading on x-axis during decelerating phase,sd,,
-gyro_y_Dec_sd,gyrometer reading on y-axis during decelerating phase,sd,,
-gyro_z_Dec_sd,gyrometer reading on z-axis during decelerating phase,sd,,
-acc_x_Dec_max,acceleration on x-axis during decelerating phase,max,,
-acc_y_Dec_max,acceleration on y-axis during decelerating phase,max,,
-acc_z_Dec_max,acceleration on z-axis during decelerating phase,max,,
-acc_xy_Dec_max,acceleration on xy-plane during decelerating phase,max,,
-acc_xyz_Dec_max,acceleration on xyz-plane during decelerating phase,max,,
-gyro_x_Dec_max,gyrometer reading on x-axis during decelerating phase,max,,
-gyro_y_Dec_max,gyrometer reading on y-axis during decelerating phase,max,,
-gyro_z_Dec_max,gyrometer reading on z-axis during decelerating phase,max,,
-acc_x_d1_Dec_mean,first difference of acceleration on x-axis during decelerating phase,mean,,acceleration on x-axis during decelerating phase
-acc_y_d1_Dec_mean,first difference of acceleration on y-axis during decelerating phase,mean,,acceleration on y-axis during decelerating phase
-acc_z_d1_Dec_mean,first difference of acceleration on z-axis during decelerating phase,mean,,acceleration on z-axis during decelerating phase
-acc_xy_d1_Dec_mean,first difference of acceleration on xy-plane during decelerating phase,mean,,acceleration on xy-plane during decelerating phase
-acc_xyz_d1_Dec_mean,first difference of acceleration on xyz-plane during decelerating phase,mean,,acceleration on xyz-plane during decelerating phase
-gyro_x_d1_Dec_mean,first difference of gyrometer reading on x-axis during decelerating phase,mean,,gyrometer reading on x-axis during decelerating phase
-gyro_y_d1_Dec_mean,first difference of gyrometer reading on y-axis during decelerating phase,mean,,gyrometer reading on y-axis during decelerating phase
-gyro_z_d1_Dec_mean,first difference of gyrometer reading on z-axis during decelerating phase,mean,,gyrometer reading on z-axis during decelerating phase
-acc_x_d1_Dec_sd,first difference of acceleration on x-axis during decelerating phase,sd,,
-acc_y_d1_Dec_sd,first difference of acceleration on y-axis during decelerating phase,sd,,
-acc_z_d1_Dec_sd,first difference of acceleration on z-axis during decelerating phase,sd,,
-acc_xy_d1_Dec_sd,first difference of acceleration on xy-plane during decelerating phase,sd,,
-acc_xyz_d1_Dec_sd,first difference of acceleration on xyz-plane during decelerating phase,sd,,
-gyro_x_d1_Dec_sd,first difference of gyrometer reading on x-axis during decelerating phase,sd,,
-gyro_y_d1_Dec_sd,first difference of gyrometer reading on y-axis during decelerating phase,sd,,
-gyro_z_d1_Dec_sd,first difference of gyrometer reading on z-axis during decelerating phase,sd,,
-acc_x_d1_Dec_max,first difference of acceleration on x-axis during decelerating phase,max,,
-acc_y_d1_Dec_max,first difference of acceleration on y-axis during decelerating phase,max,,
-acc_z_d1_Dec_max,first difference of acceleration on z-axis during decelerating phase,max,,
-acc_xy_d1_Dec_max,first difference of acceleration on xy-plane during decelerating phase,max,,
-acc_xyz_d1_Dec_max,first difference of acceleration on xyz-plane during decelerating phase,max,,
-gyro_x_d1_Dec_max,first difference of gyrometer reading on x-axis during decelerating phase,max,,
-gyro_y_d1_Dec_max,first difference of gyrometer reading on y-axis during decelerating phase,max,,
-gyro_z_d1_Dec_max,first difference of gyrometer reading on z-axis during decelerating phase,max,,
-acc_x_Acc_mean,acceleration on x-axis during accelerating phase,mean,,
-acc_y_Acc_mean,acceleration on y-axis during accelerating phase,mean,,
-acc_z_Acc_mean,acceleration on z-axis during accelerating phase,mean,,
-acc_xy_Acc_mean,acceleration on xy-plane during accelerating phase,mean,,
-acc_xyz_Acc_mean,acceleration on xyz-plane during accelerating phase,mean,,
-gyro_x_Acc_mean,gyrometer reading on x-axis during accelerating phase,mean,,
-gyro_y_Acc_mean,gyrometer reading on y-axis during accelerating phase,mean,,
-gyro_z_Acc_mean,gyrometer reading on z-axis during accelerating phase,mean,,
-acc_x_Acc_sd,acceleration on x-axis during accelerating phase,sd,,
-acc_y_Acc_sd,acceleration on y-axis during accelerating phase,sd,,
-acc_z_Acc_sd,acceleration on z-axis during accelerating phase,sd,,
-acc_xy_Acc_sd,acceleration on xy-plane during accelerating phase,sd,,
-acc_xyz_Acc_sd,acceleration on xyz-plane during accelerating phase,sd,,
-gyro_x_Acc_sd,gyrometer reading on x-axis during accelerating phase,sd,,
-gyro_y_Acc_sd,gyrometer reading on y-axis during accelerating phase,sd,,
-gyro_z_Acc_sd,gyrometer reading on z-axis during accelerating phase,sd,,
-acc_x_Acc_max,acceleration on x-axis during accelerating phase,max,,
-acc_y_Acc_max,acceleration on y-axis during accelerating phase,max,,
-acc_z_Acc_max,acceleration on z-axis during accelerating phase,max,,
-acc_xy_Acc_max,acceleration on xy-plane during accelerating phase,max,,
-acc_xyz_Acc_max,acceleration on xyz-plane during accelerating phase,max,,
-gyro_x_Acc_max,gyrometer reading on x-axis during accelerating phase,max,,
-gyro_y_Acc_max,gyrometer reading on y-axis during accelerating phase,max,,
-gyro_z_Acc_max,gyrometer reading on z-axis during accelerating phase,max,,
-acc_x_d1_Acc_mean,first difference of acceleration on x-axis during accelerating phase,mean,,
-acc_y_d1_Acc_mean,first difference of acceleration on y-axis during accelerating phase,mean,,
-acc_z_d1_Acc_mean,first difference of acceleration on z-axis during accelerating phase,mean,,
-acc_xy_d1_Acc_mean,first difference of acceleration on xy-plane during accelerating phase,mean,,
-acc_xyz_d1_Acc_mean,first difference of acceleration on xyz-plane during accelerating phase,mean,,
-gyro_x_d1_Acc_mean,first difference of gyrometer reading on x-axis during accelerating phase,mean,,
-gyro_y_d1_Acc_mean,first difference of gyrometer reading on y-axis during accelerating phase,mean,,
-gyro_z_d1_Acc_mean,first difference of gyrometer reading on z-axis during accelerating phase,mean,,
-acc_x_d1_Acc_sd,first difference of acceleration on x-axis during accelerating phase,sd,,
-acc_y_d1_Acc_sd,first difference of acceleration on y-axis during accelerating phase,sd,,
-acc_z_d1_Acc_sd,first difference of acceleration on z-axis during accelerating phase,sd,,
-acc_xy_d1_Acc_sd,first difference of acceleration on xy-plane during accelerating phase,sd,,
-acc_xyz_d1_Acc_sd,first difference of acceleration on xyz-plane during accelerating phase,sd,,
-gyro_x_d1_Acc_sd,first difference of gyrometer reading on x-axis during accelerating phase,sd,,
-gyro_y_d1_Acc_sd,first difference of gyrometer reading on y-axis during accelerating phase,sd,,
-gyro_z_d1_Acc_sd,first difference of gyrometer reading on z-axis during accelerating phase,sd,,
-acc_x_d1_Acc_max,first difference of acceleration on x-axis during accelerating phase,max,,
-acc_y_d1_Acc_max,first difference of acceleration on y-axis during accelerating phase,max,,
-acc_z_d1_Acc_max,first difference of acceleration on z-axis during accelerating phase,max,,
-acc_xy_d1_Acc_max,first difference of acceleration on xy-plane during accelerating phase,max,,
-acc_xyz_d1_Acc_max,first difference of acceleration on xyz-plane during accelerating phase,max,,
-gyro_x_d1_Acc_max,first difference of gyrometer reading on x-axis during accelerating phase,max,,
-gyro_y_d1_Acc_max,first difference of gyrometer reading on y-axis during accelerating phase,max,,
-gyro_z_d1_Acc_max,first difference of gyrometer reading on z-axis during accelerating phase,max,,
-Speed_Ld1_SE_mean,Speed 1 second after the end of stop,mean,,
-Speed_Ld2_SE_mean,Speed 2 seconds after the end of stop,mean,,
-Speed_Ld3_SE_mean,Speed 3 seconds after the end of stop,mean,,
-Speed_Ld1_SE_sd,Speed 1 second after the end of stop,sd,,
-Speed_Ld2_SE_sd,Speed 2 seconds after the end of stop,sd,,
-Speed_Ld3_SE_sd,Speed 3 seconds after the end of stop,sd,,
-Speed_Ld1_SE_max,Speed 1 second after the end of stop,max,,
-Speed_Ld2_SE_max,Speed 2 seconds after the end of stop,max,,
-Speed_Ld3_SE_max,Speed 3 seconds after the end of stop,max,,
-Speed_Lg1_SS_mean,Speed 1 second before the start of stop,mean,,
-Speed_Lg2_SS_mean,Speed 2 seconds before the start of stop,mean,,
-Speed_Lg3_SS_mean,Speed 3 seconds before the start of stop,mean,,
-Speed_Lg1_SS_sd,Speed 1 second before the start of stop,sd,,
-Speed_Lg2_SS_sd,Speed 2 seconds before the start of stop,sd,,
-Speed_Lg3_SS_sd,Speed 3 seconds before the start of stop,sd,,
-Speed_Lg1_SS_max,Speed 1 second before the start of stop,max,,
-Speed_Lg2_SS_max,Speed 2 seconds before the start of stop,max,,
-Speed_Lg3_SS_max,Speed 3 seconds before the start of stop,max,,
-Speed_LMax_mean,Speed at Local Maximum,mean,,
-Speed_Lg1_LMax_mean,Speed 1 second before Local Maximum,mean,,
-Speed_Lg2_LMax_mean,Speed 2 seconds before Local Maximum,mean,,
-Speed_Lg3_LMax_mean,Speed 3 seconds before Local Maximum,mean,,
-Speed_Ld1_LMax_mean,Speed 1 second after Local Maximum,mean,,
-Speed_Ld2_LMax_mean,Speed 2 seconds after Local Maximum,mean,,
-Speed_Ld3_LMax_mean,Speed 3 seconds after Local Maximum,mean,,
-Speed_LMax_sd,Speed at Local Maximum,sd,,
-Speed_Lg1_LMax_sd,Speed 1 second before Local Maximum,sd,,
-Speed_Lg2_LMax_sd,Speed 2 seconds before Local Maximum,sd,,
-Speed_Lg3_LMax_sd,Speed 3 seconds before Local Maximum,sd,,
-Speed_Ld1_LMax_sd,Speed 1 second after Local Maximum,sd,,
-Speed_Ld2_LMax_sd,Speed 2 seconds after Local Maximum,sd,,
-Speed_Ld3_LMax_sd,Speed 3 seconds after Local Maximum,sd,,
-Speed_LMax_max,Speed at Local Maximum,max,,
-Speed_Lg1_LMax_max,Speed 1 second before Local Maximum,max,,
-Speed_Lg2_LMax_max,Speed 2 seconds before Local Maximum,max,,
-Speed_Lg3_LMax_max,Speed 3 seconds before Local Maximum,max,,
-Speed_Ld1_LMax_max,Speed 1 second after Local Maximum,max,,
-Speed_Ld2_LMax_max,Speed 2 seconds after Local Maximum,max,,
-Speed_Ld3_LMax_max,Speed 3 seconds after Local Maximum,max,,
-Speed_LMin_mean,Speed at Local Minimum,mean,,
-Speed_Lg1_LMin_mean,Speed 1 second before Local Minimum,mean,,
-Speed_Lg2_LMin_mean,Speed 2 seconds before Local Minimum,mean,,
-Speed_Lg3_LMin_mean,Speed 3 seconds before Local Minimum,mean,,
-Speed_Ld1_LMin_mean,Speed 1 second after Local Minimum,mean,,
-Speed_Ld2_LMin_mean,Speed 2 seconds after Local Minimum,mean,,
-Speed_Ld3_LMin_mean,Speed 3 seconds after Local Minimum,mean,,
-Speed_LMin_sd,Speed at Local Minimum,sd,,
-Speed_Lg1_LMin_sd,Speed 1 second before Local Minimum,sd,,
-Speed_Lg2_LMin_sd,Speed 2 seconds before Local Minimum,sd,,
-Speed_Lg3_LMin_sd,Speed 3 seconds before Local Minimum,sd,,
-Speed_Ld1_LMin_sd,Speed 1 second after Local Minimum,sd,,
-Speed_Ld2_LMin_sd,Speed 2 seconds after Local Minimum,sd,,
-Speed_Ld3_LMin_sd,Speed 3 seconds after Local Minimum,sd,,
-Speed_LMin_max,Speed at Local Minimum,max,,
-Speed_Lg1_LMin_max,Speed 1 second before Local Minimum,max,,
-Speed_Lg2_LMin_max,Speed 2 seconds before Local Minimum,max,,
-Speed_Lg3_LMin_max,Speed 3 seconds before Local Minimum,max,,
-Speed_Ld1_LMin_max,Speed 1 second after Local Minimum,max,,
-Speed_Ld2_LMin_max,Speed 2 seconds after Local Minimum,max,,
-Speed_Ld3_LMin_max,Speed 3 seconds after Local Minimum,max,,
-LocalMin_N,Number of Local Minima,,,
-LocalMax_N,Number of Local Maxima,,,
-Stop_N,Number of Stops,,,
-Stop_sec,Duration of Stops,,,
-Duration,Duration of the whole trip,,,
-Anomaly1,Number of Anomaly 1 (Speed == -1),,,
-Anomaly2,Number of Anomaly 2 (Speed == -1 & Bearing == 0),,,
-Acr_03,Proportion of time Accuracy has reading of 3,,,
-Acr_039,Proportion of time Accuracy has reading of 3.9,,,
-Acr_04,Proportion of time Accuracy has reading of 4,,,
-Acr_05,Proportion of time Accuracy has reading of 5,,,
-Acr_06,Proportion of time Accuracy has reading of 6,,,
-Acr_08,Proportion of time Accuracy has reading of 8,,,
-Acr_10,Proportion of time Accuracy has reading of 10,,,
-Acr_12,Proportion of time Accuracy has reading of 12,,,
-Acr_16,Proportion of time Accuracy has reading of 16,,,
-Acr_32,Proportion of time Accuracy has reading of 32,,,
-Acr_03_stop,Proportion of time Accuracy has reading of 3 and is at a stop,,,
-Acr_d1_mean,First difference of Accuracy,mean,,
-Acr_d1_max,First difference of Accuracy,max,,
-Acr_d1_sd,First difference of Accuracy,sd,,
+Feature,Description,Method of Aggregation
+acc_x_Dec_mean,acceleration on x-axis during decelerating phase,mean
+acc_y_Dec_mean,acceleration on y-axis during decelerating phase,mean
+acc_z_Dec_mean,acceleration on z-axis during decelerating phase,mean
+acc_xy_Dec_mean,acceleration on xy-plane during decelerating phase,mean
+acc_xyz_Dec_mean,acceleration on xyz-plane during decelerating phase,mean
+gyro_x_Dec_mean,gyrometer reading on x-axis during decelerating phase,mean
+gyro_y_Dec_mean,gyrometer reading on y-axis during decelerating phase,mean
+gyro_z_Dec_mean,gyrometer reading on z-axis during decelerating phase,mean
+acc_x_Dec_sd,acceleration on x-axis during decelerating phase,sd
+acc_y_Dec_sd,acceleration on y-axis during decelerating phase,sd
+acc_z_Dec_sd,acceleration on z-axis during decelerating phase,sd
+acc_xy_Dec_sd,acceleration on xy-plane during decelerating phase,sd
+acc_xyz_Dec_sd,acceleration on xyz-plane during decelerating phase,sd
+gyro_x_Dec_sd,gyrometer reading on x-axis during decelerating phase,sd
+gyro_y_Dec_sd,gyrometer reading on y-axis during decelerating phase,sd
+gyro_z_Dec_sd,gyrometer reading on z-axis during decelerating phase,sd
+acc_x_Dec_max,acceleration on x-axis during decelerating phase,max
+acc_y_Dec_max,acceleration on y-axis during decelerating phase,max
+acc_z_Dec_max,acceleration on z-axis during decelerating phase,max
+acc_xy_Dec_max,acceleration on xy-plane during decelerating phase,max
+acc_xyz_Dec_max,acceleration on xyz-plane during decelerating phase,max
+gyro_x_Dec_max,gyrometer reading on x-axis during decelerating phase,max
+gyro_y_Dec_max,gyrometer reading on y-axis during decelerating phase,max
+gyro_z_Dec_max,gyrometer reading on z-axis during decelerating phase,max
+acc_x_d1_Dec_mean,first difference of acceleration on x-axis during decelerating phase,mean
+acc_y_d1_Dec_mean,first difference of acceleration on y-axis during decelerating phase,mean
+acc_z_d1_Dec_mean,first difference of acceleration on z-axis during decelerating phase,mean
+acc_xy_d1_Dec_mean,first difference of acceleration on xy-plane during decelerating phase,mean
+acc_xyz_d1_Dec_mean,first difference of acceleration on xyz-plane during decelerating phase,mean
+gyro_x_d1_Dec_mean,first difference of gyrometer reading on x-axis during decelerating phase,mean
+gyro_y_d1_Dec_mean,first difference of gyrometer reading on y-axis during decelerating phase,mean
+gyro_z_d1_Dec_mean,first difference of gyrometer reading on z-axis during decelerating phase,mean
+acc_x_d1_Dec_sd,first difference of acceleration on x-axis during decelerating phase,sd
+acc_y_d1_Dec_sd,first difference of acceleration on y-axis during decelerating phase,sd
+acc_z_d1_Dec_sd,first difference of acceleration on z-axis during decelerating phase,sd
+acc_xy_d1_Dec_sd,first difference of acceleration on xy-plane during decelerating phase,sd
+acc_xyz_d1_Dec_sd,first difference of acceleration on xyz-plane during decelerating phase,sd
+gyro_x_d1_Dec_sd,first difference of gyrometer reading on x-axis during decelerating phase,sd
+gyro_y_d1_Dec_sd,first difference of gyrometer reading on y-axis during decelerating phase,sd
+gyro_z_d1_Dec_sd,first difference of gyrometer reading on z-axis during decelerating phase,sd
+acc_x_d1_Dec_max,first difference of acceleration on x-axis during decelerating phase,max
+acc_y_d1_Dec_max,first difference of acceleration on y-axis during decelerating phase,max
+acc_z_d1_Dec_max,first difference of acceleration on z-axis during decelerating phase,max
+acc_xy_d1_Dec_max,first difference of acceleration on xy-plane during decelerating phase,max
+acc_xyz_d1_Dec_max,first difference of acceleration on xyz-plane during decelerating phase,max
+gyro_x_d1_Dec_max,first difference of gyrometer reading on x-axis during decelerating phase,max
+gyro_y_d1_Dec_max,first difference of gyrometer reading on y-axis during decelerating phase,max
+gyro_z_d1_Dec_max,first difference of gyrometer reading on z-axis during decelerating phase,max
+acc_x_Acc_mean,acceleration on x-axis during accelerating phase,mean
+acc_y_Acc_mean,acceleration on y-axis during accelerating phase,mean
+acc_z_Acc_mean,acceleration on z-axis during accelerating phase,mean
+acc_xy_Acc_mean,acceleration on xy-plane during accelerating phase,mean
+acc_xyz_Acc_mean,acceleration on xyz-plane during accelerating phase,mean
+gyro_x_Acc_mean,gyrometer reading on x-axis during accelerating phase,mean
+gyro_y_Acc_mean,gyrometer reading on y-axis during accelerating phase,mean
+gyro_z_Acc_mean,gyrometer reading on z-axis during accelerating phase,mean
+acc_x_Acc_sd,acceleration on x-axis during accelerating phase,sd
+acc_y_Acc_sd,acceleration on y-axis during accelerating phase,sd
+acc_z_Acc_sd,acceleration on z-axis during accelerating phase,sd
+acc_xy_Acc_sd,acceleration on xy-plane during accelerating phase,sd
+acc_xyz_Acc_sd,acceleration on xyz-plane during accelerating phase,sd
+gyro_x_Acc_sd,gyrometer reading on x-axis during accelerating phase,sd
+gyro_y_Acc_sd,gyrometer reading on y-axis during accelerating phase,sd
+gyro_z_Acc_sd,gyrometer reading on z-axis during accelerating phase,sd
+acc_x_Acc_max,acceleration on x-axis during accelerating phase,max
+acc_y_Acc_max,acceleration on y-axis during accelerating phase,max
+acc_z_Acc_max,acceleration on z-axis during accelerating phase,max
+acc_xy_Acc_max,acceleration on xy-plane during accelerating phase,max
+acc_xyz_Acc_max,acceleration on xyz-plane during accelerating phase,max
+gyro_x_Acc_max,gyrometer reading on x-axis during accelerating phase,max
+gyro_y_Acc_max,gyrometer reading on y-axis during accelerating phase,max
+gyro_z_Acc_max,gyrometer reading on z-axis during accelerating phase,max
+acc_x_d1_Acc_mean,first difference of acceleration on x-axis during accelerating phase,mean
+acc_y_d1_Acc_mean,first difference of acceleration on y-axis during accelerating phase,mean
+acc_z_d1_Acc_mean,first difference of acceleration on z-axis during accelerating phase,mean
+acc_xy_d1_Acc_mean,first difference of acceleration on xy-plane during accelerating phase,mean
+acc_xyz_d1_Acc_mean,first difference of acceleration on xyz-plane during accelerating phase,mean
+gyro_x_d1_Acc_mean,first difference of gyrometer reading on x-axis during accelerating phase,mean
+gyro_y_d1_Acc_mean,first difference of gyrometer reading on y-axis during accelerating phase,mean
+gyro_z_d1_Acc_mean,first difference of gyrometer reading on z-axis during accelerating phase,mean
+acc_x_d1_Acc_sd,first difference of acceleration on x-axis during accelerating phase,sd
+acc_y_d1_Acc_sd,first difference of acceleration on y-axis during accelerating phase,sd
+acc_z_d1_Acc_sd,first difference of acceleration on z-axis during accelerating phase,sd
+acc_xy_d1_Acc_sd,first difference of acceleration on xy-plane during accelerating phase,sd
+acc_xyz_d1_Acc_sd,first difference of acceleration on xyz-plane during accelerating phase,sd
+gyro_x_d1_Acc_sd,first difference of gyrometer reading on x-axis during accelerating phase,sd
+gyro_y_d1_Acc_sd,first difference of gyrometer reading on y-axis during accelerating phase,sd
+gyro_z_d1_Acc_sd,first difference of gyrometer reading on z-axis during accelerating phase,sd
+acc_x_d1_Acc_max,first difference of acceleration on x-axis during accelerating phase,max
+acc_y_d1_Acc_max,first difference of acceleration on y-axis during accelerating phase,max
+acc_z_d1_Acc_max,first difference of acceleration on z-axis during accelerating phase,max
+acc_xy_d1_Acc_max,first difference of acceleration on xy-plane during accelerating phase,max
+acc_xyz_d1_Acc_max,first difference of acceleration on xyz-plane during accelerating phase,max
+gyro_x_d1_Acc_max,first difference of gyrometer reading on x-axis during accelerating phase,max
+gyro_y_d1_Acc_max,first difference of gyrometer reading on y-axis during accelerating phase,max
+gyro_z_d1_Acc_max,first difference of gyrometer reading on z-axis during accelerating phase,max
+Speed_Ld1_SE_mean,Speed 1 second after the end of stop,mean
+Speed_Ld2_SE_mean,Speed 2 seconds after the end of stop,mean
+Speed_Ld3_SE_mean,Speed 3 seconds after the end of stop,mean
+Speed_Ld1_SE_sd,Speed 1 second after the end of stop,sd
+Speed_Ld2_SE_sd,Speed 2 seconds after the end of stop,sd
+Speed_Ld3_SE_sd,Speed 3 seconds after the end of stop,sd
+Speed_Ld1_SE_max,Speed 1 second after the end of stop,max
+Speed_Ld2_SE_max,Speed 2 seconds after the end of stop,max
+Speed_Ld3_SE_max,Speed 3 seconds after the end of stop,max
+Speed_Lg1_SS_mean,Speed 1 second before the start of stop,mean
+Speed_Lg2_SS_mean,Speed 2 seconds before the start of stop,mean
+Speed_Lg3_SS_mean,Speed 3 seconds before the start of stop,mean
+Speed_Lg1_SS_sd,Speed 1 second before the start of stop,sd
+Speed_Lg2_SS_sd,Speed 2 seconds before the start of stop,sd
+Speed_Lg3_SS_sd,Speed 3 seconds before the start of stop,sd
+Speed_Lg1_SS_max,Speed 1 second before the start of stop,max
+Speed_Lg2_SS_max,Speed 2 seconds before the start of stop,max
+Speed_Lg3_SS_max,Speed 3 seconds before the start of stop,max
+Speed_LMax_mean,Speed at Local Maximum,mean
+Speed_Lg1_LMax_mean,Speed 1 second before Local Maximum,mean
+Speed_Lg2_LMax_mean,Speed 2 seconds before Local Maximum,mean
+Speed_Lg3_LMax_mean,Speed 3 seconds before Local Maximum,mean
+Speed_Ld1_LMax_mean,Speed 1 second after Local Maximum,mean
+Speed_Ld2_LMax_mean,Speed 2 seconds after Local Maximum,mean
+Speed_Ld3_LMax_mean,Speed 3 seconds after Local Maximum,mean
+Speed_LMax_sd,Speed at Local Maximum,sd
+Speed_Lg1_LMax_sd,Speed 1 second before Local Maximum,sd
+Speed_Lg2_LMax_sd,Speed 2 seconds before Local Maximum,sd
+Speed_Lg3_LMax_sd,Speed 3 seconds before Local Maximum,sd
+Speed_Ld1_LMax_sd,Speed 1 second after Local Maximum,sd
+Speed_Ld2_LMax_sd,Speed 2 seconds after Local Maximum,sd
+Speed_Ld3_LMax_sd,Speed 3 seconds after Local Maximum,sd
+Speed_LMax_max,Speed at Local Maximum,max
+Speed_Lg1_LMax_max,Speed 1 second before Local Maximum,max
+Speed_Lg2_LMax_max,Speed 2 seconds before Local Maximum,max
+Speed_Lg3_LMax_max,Speed 3 seconds before Local Maximum,max
+Speed_Ld1_LMax_max,Speed 1 second after Local Maximum,max
+Speed_Ld2_LMax_max,Speed 2 seconds after Local Maximum,max
+Speed_Ld3_LMax_max,Speed 3 seconds after Local Maximum,max
+Speed_LMin_mean,Speed at Local Minimum,mean
+Speed_Lg1_LMin_mean,Speed 1 second before Local Minimum,mean
+Speed_Lg2_LMin_mean,Speed 2 seconds before Local Minimum,mean
+Speed_Lg3_LMin_mean,Speed 3 seconds before Local Minimum,mean
+Speed_Ld1_LMin_mean,Speed 1 second after Local Minimum,mean
+Speed_Ld2_LMin_mean,Speed 2 seconds after Local Minimum,mean
+Speed_Ld3_LMin_mean,Speed 3 seconds after Local Minimum,mean
+Speed_LMin_sd,Speed at Local Minimum,sd
+Speed_Lg1_LMin_sd,Speed 1 second before Local Minimum,sd
+Speed_Lg2_LMin_sd,Speed 2 seconds before Local Minimum,sd
+Speed_Lg3_LMin_sd,Speed 3 seconds before Local Minimum,sd
+Speed_Ld1_LMin_sd,Speed 1 second after Local Minimum,sd
+Speed_Ld2_LMin_sd,Speed 2 seconds after Local Minimum,sd
+Speed_Ld3_LMin_sd,Speed 3 seconds after Local Minimum,sd
+Speed_LMin_max,Speed at Local Minimum,max
+Speed_Lg1_LMin_max,Speed 1 second before Local Minimum,max
+Speed_Lg2_LMin_max,Speed 2 seconds before Local Minimum,max
+Speed_Lg3_LMin_max,Speed 3 seconds before Local Minimum,max
+Speed_Ld1_LMin_max,Speed 1 second after Local Minimum,max
+Speed_Ld2_LMin_max,Speed 2 seconds after Local Minimum,max
+Speed_Ld3_LMin_max,Speed 3 seconds after Local Minimum,max
+LocalMin_N,Number of Local Minima,
+LocalMax_N,Number of Local Maxima,
+Stop_N,Number of Stops,
+Stop_sec,Duration of Stops,
+Duration,Duration of the whole trip,
+Anomaly1,Number of Anomaly 1 (Speed == -1),
+Anomaly2,Number of Anomaly 2 (Speed == -1 & Bearing == 0),
+Acr_03,Proportion of time Accuracy has reading of 3,
+Acr_039,Proportion of time Accuracy has reading of 3.9,
+Acr_04,Proportion of time Accuracy has reading of 4,
+Acr_05,Proportion of time Accuracy has reading of 5,
+Acr_06,Proportion of time Accuracy has reading of 6,
+Acr_08,Proportion of time Accuracy has reading of 8,
+Acr_10,Proportion of time Accuracy has reading of 10,
+Acr_12,Proportion of time Accuracy has reading of 12,
+Acr_16,Proportion of time Accuracy has reading of 16,
+Acr_32,Proportion of time Accuracy has reading of 32,
+Acr_03_stop,Proportion of time Accuracy has reading of 3 and is at a stop,
+Acr_d1_mean,First difference of Accuracy,mean
+Acr_d1_max,First difference of Accuracy,max
+Acr_d1_sd,First difference of Accuracy,sd
