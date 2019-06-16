@@ -2,7 +2,7 @@
 
 This repository is created for the submission for the Grab AI For SEA Challenge (https://www.aiforsea.com/).
 
-As part of the challenge, I have signed up for the question under the theme of Safety.
+As part of the challenge, I have signed up for the question under the theme of Safety. I have used the R programming language in this challenge.
 
 [tbc]
 
