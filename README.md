@@ -18,11 +18,15 @@ The label of dangerous driving records in binary form of whether a trip is consi
 
 Note that there are some of the bookings with multiple labels. [How to deal with it?]
 
-## Some Visualizations
-
 # Feature Engineering
 
 Based on the fields in the telematics data, feature engineering has to be conducted in order to obtain aggregate features that are meaningful in determining the riskiness in a particular booking.
+
+## Key Concepts Applied
+
+[Lead 1 through 3, Lag 1 through 3, Local Min, Local Max, Stop]
+
+## Some Visualizations
 
 # Model Training
 
