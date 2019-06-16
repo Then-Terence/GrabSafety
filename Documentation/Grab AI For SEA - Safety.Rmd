@@ -75,6 +75,8 @@ points(pi / 2, sin(pi / 2) + 2, pch = 19)
 points(pi / 2, sin(pi / 2) + 2 - 0.1, pch = "A")
 points(pi * 1.5, sin(pi * 1.5) + 2, pch = 19)
 points(pi * 1.5, sin(pi * 1.5) + 2 + 0.1, pch = "B")
+points(pi * 2.5, sin(pi * 2.5) + 2, pch = 19)
+points(pi * 2.5, sin(pi * 2.5) + 2 - 0.1, pch = "C")
 
 X2 <- seq(pi * 0.5 - 0.5, pi * 0.5 + 0.5, 0.01)
 Y2 <- sin(X2) + 2
@@ -87,11 +89,44 @@ Y3 <- sin(X3) + 2
 lines(X3, Y3, lwd = 2, col = "blue")
 
 
+
+
 ```
 
 From the plot above, point A is a local maximum, where the driver reaches a maximum speed, compared to the instances right before and after that point. Whereas point B is the local minimum.
 
-From a local maximum point such as point A, the speed right before and after it will be very informative. It helps us answer questions such as, did the driver accelerate excessively before suddenly braking? Similar, information around point B helps us understand if the driver suddenly decelerated the car, reaching the local minimum, then speed up in a short matter of time?
+The interval from point A to point B is a decelerating phase, while the interval from point B to point C is an accelerating phase.
+
+From a local maximum point such as point A, the speed right before and after it will be very informative. This is shown by the red line. It helps us answer questions such as, did the driver accelerate excessively before suddenly braking? Similarly, information around point B (blue line) helps us understand if the driver suddenly decelerated the car, reaching the local minimum, then speed up in a short matter of time?
+
+One special case of local minima is when the car is completely stopped, i.e. when speed is at 0. This usually happens when the car is at a red light or a busy junction. Again, we would like to know how fast the car decelerated right before it came to a complete stop, and how fast the car accelerated once it started moving again.
+
+The phases of accelerating and decelerating allow us to aggregate the fields more easily without the worry that the numbers may cancel each other out.
+
+### Defining the Phases
+
+While things may look simple based on the plot above, reality is hardly so. We do not have readily available the data which tells us if a certain point is a local maximum or local minimum.
+
+Therefore, we have to define such phases from the data given.
+
+First of all, for any point of the data, I have used the lag and lead speed for up to three seconds. From there, I define the phases as such:
+
+Stop:
+
+1. Speed equals to 0; OR
+2. Speed less than 0.2 AND Speed (Lag 1) equals to 0 AND Speed (Lead 1) equals to 0; OR
+3. Speed less than 0.2 AND Speed (Lag 2) equals to 0 AND Speed (Lead 2) equals to 0; OR
+4. Speed less than 0.2 AND Speed (Lag 3) equals to 0 AND Speed (Lead 3) equals to 0
+
+Stops are defined as such because in the data, there are several points between stops where the car has picked up a very small amount of speed (around 0.1 to 0.2). For the purpose of practicality, those points should still be considered stops.
+
+Local Minimum:
+
+1. Speed less than Speed (Lag 1 to 3) and Speed (Lead 1 to 3); OR
+2. Speed less than Speed (Lag 1 to 3) and Speed (Lead 1 to 3) are not available; OR
+2. Speed less than Speed (Lead 1 to 3) and Speed (Lag 1 to 3) are not available
+
+
 
 
 
