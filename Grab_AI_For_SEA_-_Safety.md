@@ -210,8 +210,9 @@ contain some information not immediately apparent.
 
 As such, I have also defined the following:
 
-Anomaly1: Speed equals to -1 Anomaly2: Speed equals to -1 AND Bearing
-equals to 0
+Anomaly1: Speed equals to -1
+
+Anomaly2: Speed equals to -1 AND Bearing equals to 0
 
 Data points with tags of Anomaly1 and Anomaly2 are not used in computing
 the features.
@@ -309,9 +310,19 @@ Non Phase-based Features
 On top of the features described above, I have computed some features
 not based on the phases.
 
-Duration (computed as max(second) + 1, since it starts with 0) No. of
-Local Minima No. of Local Maxima No. of Stops Duration of Stops No. of
-Anomaly1 No. of Anomaly2
+Duration (computed as max(second) + 1, since it starts with 0)
+
+No. of Local Minima
+
+No. of Local Maxima
+
+No. of Stops
+
+Duration of Stops
+
+No. of Anomaly1
+
+No. of Anomaly2
 
 Other than that, the finding from Accuracy is that it clusters around
 some common values. The 10 most common values are:
