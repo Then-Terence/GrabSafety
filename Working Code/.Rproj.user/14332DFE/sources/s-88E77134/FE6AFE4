@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1560727180855.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FE6AFE4",
+    "lastKnownWriteTime" : 1560727259,
+    "last_content_update" : 1560727259705,
+    "path" : "~/AI for SEA (Grab)/Working Code/Output/Documentation/Grab AI For SEA - Safety.Rmd",
+    "project_path" : "Output/Documentation/Grab AI For SEA - Safety.Rmd",
+    "properties" : {
+        "cursorPosition" : "265,59",
+        "last_setup_crc32" : "88E77134d987ab7c",
+        "scrollLine" : "253",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

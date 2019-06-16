@@ -1,0 +1,2 @@
+"0","ggplot(data = CVRounds[[""evaluation_log""]]) +"
+"0","  geom_line(aes(x = iter, y = test_auc_mean))"

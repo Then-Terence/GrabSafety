@@ -1,0 +1,429 @@
+
+rm(list = ls(all.names = T)); gc()
+
+library(data.table)
+library(bit64)
+
+source("Scripts/Helpers.R")
+
+# Pointing at the directory of the files
+FileFeature <- list.files("Data/features/", ".csv", full.names = T)
+FileLabel <- list.files("Data/labels/", ".csv", full.names = T)
+
+DTLabel <- fread(FileLabel)
+# Aggregate based on maximum, ie giving a label 1 if there is at least one label of 1
+DTLabel <- DTLabel[, .(label = max(label)), bookingID]
+
+
+# Run a loop to combine all the feature files
+DTFeature <- data.table()
+
+for(i in 1:length(FileFeature)){
+  
+  DTFeature <- rbind(DTFeature, fread(FileFeature[i]))
+  gc()
+  
+}
+
+# List all the booking IDs
+# Split into 40 parts
+# Only process 500 booking IDs at once
+# To deal with memory constraints
+# Save the 40 aggregated data sets as .RData files
+
+AllID <- unique(DTFeature[, bookingID])
+
+N <- 40
+
+DT <- data.table()
+
+for(i in 1:N){
+  
+  Start <- 1 + (length(AllID) * (i - 1) / N)
+  Stop  <- (length(AllID) * i / N)
+  
+  SelectedID <- AllID[Start:Stop]
+  
+  DTSubset <- DTFeature[bookingID %in% SelectedID, ]
+  DTFeature <- DTFeature[!bookingID %in% SelectedID, ]
+  
+  # Fill in the seconds where there are no data
+  # So that at least 3 seconds of lead and lag (Speed) can be found
+  # This is important in defining the phases which most features are based on
+  DTSubset <- FillDT(DTSubset)
+  
+  #### Compute Fields ####
+  
+  # Shorten some names
+  # acceleration into acc
+  # Accuracy into acr
+  setnames(DTSubset,
+           c("acceleration_x", "acceleration_y", "acceleration_z", "Accuracy"),
+           c("acc_x", "acc_y", "acc_z", "Acr"))
+  
+  
+  # Compute some fields of first differences
+  # and acceleration based on multiple axes
+  DTSubset[, `:=`(acc_xy = sqrt(acc_x ^ 2 +
+                                  acc_y ^ 2),
+                  acc_xyz = sqrt(acc_x ^ 2 +
+                                   acc_y ^ 2 +
+                                   acc_z ^ 2),
+                  acc_x_d1 = acc_x - shift(acc_x, 1, NA, "lag"),
+                  acc_y_d1 = acc_y - shift(acc_y, 1, NA, "lag"),
+                  acc_z_d1 = acc_z - shift(acc_z, 1, NA, "lag"),
+                  Bearing_d1 = Bearing - shift(Bearing, 1, NA, "lag"),
+                  gyro_x_d1 = gyro_x - shift(gyro_x, 1, NA, "lag"),
+                  gyro_y_d1 = gyro_y - shift(gyro_y, 1, NA, "lag"),
+                  gyro_z_d1 = gyro_z - shift(gyro_z, 1, NA, "lag"),
+                  Acr_d1    = Acr - shift(Acr, 1, NA, "lag"))]
+  
+  DTSubset[, Bearing_d1 := abs(Bearing_d1)]
+  DTSubset[Bearing_d1 > 180, Bearing_d1 := 360 - Bearing_d1]
+  
+  DTSubset[, `:=`(acc_xy_d1 = acc_xy - shift(acc_xy, 1, NA, "lag"),
+                  acc_xyz_d1 = acc_xyz - shift(acc_xyz, 1, NA, "lag"))]
+  
+  
+  # Define Local Minima and Local Maxima
+  
+  # Obtain the lag and lead speed up to 3 seconds
+  DTSubset[, `:=`(Speed_Lg1 = shift(Speed, 1, type = "lag"),
+                  Speed_Lg2 = shift(Speed, 2, type = "lag"),
+                  Speed_Lg3 = shift(Speed, 3, type = "lag"),
+                  Speed_Ld1 = shift(Speed, 1, type = "lead"),
+                  Speed_Ld2 = shift(Speed, 2, type = "lead"),
+                  Speed_Ld3 = shift(Speed, 3, type = "lead"))]
+  
+  # Identify Local Max
+  DTSubset[, LocalMax := 0]
+  DTSubset[Speed > pmax(Speed_Lg1, Speed_Lg2, Speed_Lg3) &
+             Speed > pmax(Speed_Ld1, Speed_Ld2, Speed_Ld3),
+           LocalMax := 1]
+  DTSubset[is.na(Speed_Lg1) & is.na(Speed_Lg2) & is.na(Speed_Lg3) &
+             Speed > pmax(Speed_Ld1, Speed_Ld2, Speed_Ld3),
+           LocalMax := 1]
+  DTSubset[Speed > pmax(Speed_Lg1, Speed_Lg2, Speed_Lg3) &
+             is.na(Speed_Ld1) & is.na(Speed_Ld2) & is.na(Speed_Ld3),
+           LocalMax := 1]
+  
+  # Identify Local Min
+  DTSubset[, LocalMin := 0]
+  DTSubset[Speed < pmin(Speed_Lg1, Speed_Lg2, Speed_Lg3) &
+             Speed < pmin(Speed_Ld1, Speed_Ld2, Speed_Ld3),
+           LocalMin := 1]
+  DTSubset[is.na(Speed_Lg1) & is.na(Speed_Lg2) & is.na(Speed_Lg3) &
+             Speed < pmin(Speed_Ld1, Speed_Ld2, Speed_Ld3),
+           LocalMin := 1]
+  DTSubset[Speed < pmin(Speed_Lg1, Speed_Lg2, Speed_Lg3) &
+             is.na(Speed_Ld1) & is.na(Speed_Ld2) & is.na(Speed_Ld3),
+           LocalMin := 1]
+  
+  # Identify Stops
+  DTSubset[, Stop := 0]
+  DTSubset[Speed == 0, Stop := 1]
+  DTSubset[Speed < 0.2 & Speed_Lg1 == 0 & Speed_Ld1 == 0, Stop := 1]
+  DTSubset[Speed < 0.2 & Speed_Lg2 == 0 & Speed_Ld2 == 0, Stop := 1]
+  DTSubset[Speed < 0.2 & Speed_Lg3 == 0 & Speed_Ld3 == 0, Stop := 1]
+  
+  DTSubset[, Stop_start := 0]
+  DTSubset[, Stop_end := 0]
+  
+  DTSubset[Stop == 1 & shift(Stop, 1, type = "lag") == 0, Stop_start := 1]
+  DTSubset[Stop == 1 & shift(Stop, 1, type = "lead") == 0, Stop_end := 1]
+  
+  # Identify Stages (Accelerating or Decelerating)
+  DTSubset[, Acc := 0]
+  DTSubset[, Dec := 0]
+  
+  # Faster than Lag, Slower than Lead
+  DTSubset[Speed > pmax(Speed_Lg1, Speed_Lg2, Speed_Lg3) |
+             Speed < pmin(Speed_Ld1, Speed_Ld2, Speed_Ld3), Acc := 1]
+  
+  # Slower than Lag, Faster than Lead
+  DTSubset[Speed < pmin(Speed_Lg1, Speed_Lg2, Speed_Lg3) |
+             Speed > pmax(Speed_Ld1, Speed_Ld2, Speed_Ld3), Dec := 1]
+  
+  # Identify when the Accuracy reading falls under one of those common readings
+  DTSubset[, `:=`(Acr_03 = 0, Acr_039 = 0, Acr_04 = 0, Acr_05 = 0,
+                  Acr_06 = 0, Acr_08  = 0, Acr_10 = 0, Acr_12 = 0,
+                  Acr_16 = 0, Acr_32  = 0,
+                  Acr_03_stop = 0)]
+  
+  DTSubset[Acr == 3,   Acr_03  := 1]
+  DTSubset[Acr == 3.9, Acr_039 := 1]
+  DTSubset[Acr == 4,   Acr_04  := 1]
+  DTSubset[Acr == 5,   Acr_05  := 1]
+  DTSubset[Acr == 6,   Acr_06  := 1]
+  DTSubset[Acr == 8,   Acr_08  := 1]
+  DTSubset[Acr == 10,  Acr_10  := 1]
+  DTSubset[Acr == 12,  Acr_12  := 1]
+  DTSubset[Acr == 16,  Acr_16  := 1]
+  DTSubset[Acr == 32,  Acr_32  := 1]
+  DTSubset[Acr == 3 & Stop == 1, Acr_03_stop  := 1]
+  
+  # Define some possible anomalies
+  
+  DTSubset[, Anomaly1 := 0]
+  DTSubset[, Anomaly2 := 0]
+  
+  DTSubset[Speed == -1, Anomaly1 := 1]
+  DTSubset[Speed == -1 & Bearing == 0, Anomaly2 := 1]
+  
+  # This is to reduce the number of rows
+  # The field names "PlaceHolder" is put in by the self defined function FillDT()
+  # Now that leads and lags are established, those additional rows are not needed
+  DTSubset <- DTSubset[PlaceHolder == 1, ]
+  
+  #### Compute Features ####
+  
+  ## Compute non phase-based features
+  
+  DT1 <- DTSubset[, .(LocalMin_N = sum(LocalMin, na.rm = T),
+                      LocalMax_N = sum(LocalMax, na.rm = T),
+                      Stop_N     = sum(Stop_start, na.rm = T),
+                      Stop_sec   = sum(Stop, na.rm = T),
+                      Duration   = max(second, na.rm = T),
+                      Anomaly1   = sum(Anomaly1, na.rm = T),
+                      Anomaly2   = sum(Anomaly2, na.rm = T),
+                      Acr_03     = mean(Acr_03,  na.rm = T),
+                      Acr_039    = mean(Acr_039, na.rm = T),
+                      Acr_04     = mean(Acr_04,  na.rm = T),
+                      Acr_05     = mean(Acr_05,  na.rm = T),
+                      Acr_06     = mean(Acr_06,  na.rm = T),
+                      Acr_08     = mean(Acr_08,  na.rm = T),
+                      Acr_10     = mean(Acr_10,  na.rm = T),
+                      Acr_12     = mean(Acr_12,  na.rm = T),
+                      Acr_16     = mean(Acr_16,  na.rm = T),
+                      Acr_32     = mean(Acr_32,  na.rm = T),
+                      Acr_03_stop = mean(Acr_03_stop, na.rm = T),
+                      Acr_d1_mean = mean(Acr_d1, na.rm = T),
+                      Acr_d1_max  = max(Acr_d1, na.rm = T),
+                      Acr_d1_sd   = sd(Acr_d1, na.rm = T)), bookingID]
+  
+  # DT for Local Minimum
+  DT2 <- DTSubset[(LocalMin == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
+  
+  DT2 <- DT2[, .(Speed_LMin_mean     = mean(Speed, na.rm = T),
+                 Speed_Lg1_LMin_mean = mean(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_LMin_mean = mean(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_LMin_mean = mean(Speed_Lg3, na.rm = T),
+                 Speed_Ld1_LMin_mean = mean(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_LMin_mean = mean(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_LMin_mean = mean(Speed_Ld3, na.rm = T),
+                 Speed_LMin_sd     = sd(Speed, na.rm = T),
+                 Speed_Lg1_LMin_sd = sd(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_LMin_sd = sd(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_LMin_sd = sd(Speed_Lg3, na.rm = T),
+                 Speed_Ld1_LMin_sd = sd(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_LMin_sd = sd(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_LMin_sd = sd(Speed_Ld3, na.rm = T),
+                 Speed_LMin_max     = max(Speed, na.rm = T),
+                 Speed_Lg1_LMin_max = max(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_LMin_max = max(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_LMin_max = max(Speed_Lg3, na.rm = T),
+                 Speed_Ld1_LMin_max = max(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_LMin_max = max(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_LMin_max = max(Speed_Ld3, na.rm = T)), bookingID]
+  
+  # DT for Local Maximum
+  DT3 <- DTSubset[(LocalMax == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
+  
+  DT3 <- DT3[, .(Speed_LMax_mean     = mean(Speed, na.rm = T),
+                 Speed_Lg1_LMax_mean = mean(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_LMax_mean = mean(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_LMax_mean = mean(Speed_Lg3, na.rm = T),
+                 Speed_Ld1_LMax_mean = mean(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_LMax_mean = mean(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_LMax_mean = mean(Speed_Ld3, na.rm = T),
+                 Speed_LMax_sd     = sd(Speed, na.rm = T),
+                 Speed_Lg1_LMax_sd = sd(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_LMax_sd = sd(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_LMax_sd = sd(Speed_Lg3, na.rm = T),
+                 Speed_Ld1_LMax_sd = sd(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_LMax_sd = sd(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_LMax_sd = sd(Speed_Ld3, na.rm = T),
+                 Speed_LMax_max     = max(Speed, na.rm = T),
+                 Speed_Lg1_LMax_max = max(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_LMax_max = max(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_LMax_max = max(Speed_Lg3, na.rm = T),
+                 Speed_Ld1_LMax_max = max(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_LMax_max = max(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_LMax_max = max(Speed_Ld3, na.rm = T)), bookingID]
+  
+  # DT for Stop Start
+  DT4 <- DTSubset[(Stop_start == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
+  
+  DT4 <- DT4[, .(Speed_Lg1_SS_mean = mean(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_SS_mean = mean(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_SS_mean = mean(Speed_Lg3, na.rm = T),
+                 Speed_Lg1_SS_sd   = sd(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_SS_sd   = sd(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_SS_sd   = sd(Speed_Lg3, na.rm = T),
+                 Speed_Lg1_SS_max  = max(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_SS_max  = max(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_SS_max  = max(Speed_Lg3, na.rm = T)), bookingID]
+  
+  # DT for Stop End
+  DT5 <- DTSubset[(Stop_end == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
+  
+  DT5 <- DT5[, .(Speed_Lg1_SE_mean = mean(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_SE_mean = mean(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_SE_mean = mean(Speed_Lg3, na.rm = T),
+                 Speed_Lg1_SE_sd   = sd(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_SE_sd   = sd(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_SE_sd   = sd(Speed_Lg3, na.rm = T),
+                 Speed_Lg1_SE_max  = max(Speed_Lg1, na.rm = T),
+                 Speed_Lg2_SE_max  = max(Speed_Lg2, na.rm = T),
+                 Speed_Lg3_SE_max  = max(Speed_Lg3, na.rm = T)), bookingID]
+  
+  # DT for Accelerating
+  DT6 <- DTSubset[(Acc == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
+  
+  DT6 <- DT6[, .(acc_x_Acc_mean   = mean(acc_x, na.rm = T),
+                 acc_y_Acc_mean   = mean(acc_y, na.rm = T),
+                 acc_z_Acc_mean   = mean(acc_z, na.rm = T),
+                 acc_xy_Acc_mean  = mean(acc_xy, na.rm = T),
+                 acc_xyz_Acc_mean = mean(acc_xyz, na.rm = T),
+                 gyro_x_Acc_mean  = mean(gyro_x, na.rm = T),
+                 gyro_y_Acc_mean  = mean(gyro_y, na.rm = T),
+                 gyro_z_Acc_mean  = mean(gyro_z, na.rm = T),
+                 
+                 acc_x_Acc_sd   = sd(acc_x, na.rm = T),
+                 acc_y_Acc_sd   = sd(acc_y, na.rm = T),
+                 acc_z_Acc_sd   = sd(acc_z, na.rm = T),
+                 acc_xy_Acc_sd  = sd(acc_xy, na.rm = T),
+                 acc_xyz_Acc_sd = sd(acc_xyz, na.rm = T),
+                 gyro_x_Acc_sd  = sd(gyro_x, na.rm = T),
+                 gyro_y_Acc_sd  = sd(gyro_y, na.rm = T),
+                 gyro_z_Acc_sd  = sd(gyro_z, na.rm = T),
+                 
+                 acc_x_Acc_max   = max(acc_x, na.rm = T),
+                 acc_y_Acc_max   = max(acc_y, na.rm = T),
+                 acc_z_Acc_max   = max(acc_z, na.rm = T),
+                 acc_xy_Acc_max  = max(acc_xy, na.rm = T),
+                 acc_xyz_Acc_max = max(acc_xyz, na.rm = T),
+                 gyro_x_Acc_max  = max(gyro_x, na.rm = T),
+                 gyro_y_Acc_max  = max(gyro_y, na.rm = T),
+                 gyro_z_Acc_max  = max(gyro_z, na.rm = T),
+                 
+                 acc_x_d1_Acc_mean   = mean(acc_x_d1, na.rm = T),
+                 acc_y_d1_Acc_mean   = mean(acc_y_d1, na.rm = T),
+                 acc_z_d1_Acc_mean   = mean(acc_z_d1, na.rm = T),
+                 acc_xy_d1_Acc_mean  = mean(acc_xy_d1, na.rm = T),
+                 acc_xyz_d1_Acc_mean = mean(acc_xyz_d1, na.rm = T),
+                 gyro_x_d1_Acc_mean  = mean(gyro_x_d1, na.rm = T),
+                 gyro_y_d1_Acc_mean  = mean(gyro_y_d1, na.rm = T),
+                 gyro_z_d1_Acc_mean  = mean(gyro_z_d1, na.rm = T),
+                 
+                 acc_x_d1_Acc_sd   = sd(acc_x_d1, na.rm = T),
+                 acc_y_d1_Acc_sd   = sd(acc_y_d1, na.rm = T),
+                 acc_z_d1_Acc_sd   = sd(acc_z_d1, na.rm = T),
+                 acc_xy_d1_Acc_sd  = sd(acc_xy_d1, na.rm = T),
+                 acc_xyz_d1_Acc_sd = sd(acc_xyz_d1, na.rm = T),
+                 gyro_x_d1_Acc_sd  = sd(gyro_x_d1, na.rm = T),
+                 gyro_y_d1_Acc_sd  = sd(gyro_y_d1, na.rm = T),
+                 gyro_z_d1_Acc_sd  = sd(gyro_z_d1, na.rm = T),
+                 
+                 acc_x_d1_Acc_max   = max(acc_x_d1, na.rm = T),
+                 acc_y_d1_Acc_max   = max(acc_y_d1, na.rm = T),
+                 acc_z_d1_Acc_max   = max(acc_z_d1, na.rm = T),
+                 acc_xy_d1_Acc_max  = max(acc_xy_d1, na.rm = T),
+                 acc_xyz_d1_Acc_max = max(acc_xyz_d1, na.rm = T),
+                 gyro_x_d1_Acc_max  = max(gyro_x_d1, na.rm = T),
+                 gyro_y_d1_Acc_max  = max(gyro_y_d1, na.rm = T),
+                 gyro_z_d1_Acc_max  = max(gyro_z_d1, na.rm = T)), bookingID]
+  
+  # DT for Decelerating
+  DT7 <- DTSubset[(Dec == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
+  
+  DT7 <- DT7[, .(acc_x_Dec_mean   = mean(acc_x, na.rm = T),
+                 acc_y_Dec_mean   = mean(acc_y, na.rm = T),
+                 acc_z_Dec_mean   = mean(acc_z, na.rm = T),
+                 acc_xy_Dec_mean  = mean(acc_xy, na.rm = T),
+                 acc_xyz_Dec_mean = mean(acc_xyz, na.rm = T),
+                 gyro_x_Dec_mean  = mean(gyro_x, na.rm = T),
+                 gyro_y_Dec_mean  = mean(gyro_y, na.rm = T),
+                 gyro_z_Dec_mean  = mean(gyro_z, na.rm = T),
+                 
+                 acc_x_Dec_sd   = sd(acc_x, na.rm = T),
+                 acc_y_Dec_sd   = sd(acc_y, na.rm = T),
+                 acc_z_Dec_sd   = sd(acc_z, na.rm = T),
+                 acc_xy_Dec_sd  = sd(acc_xy, na.rm = T),
+                 acc_xyz_Dec_sd = sd(acc_xyz, na.rm = T),
+                 gyro_x_Dec_sd  = sd(gyro_x, na.rm = T),
+                 gyro_y_Dec_sd  = sd(gyro_y, na.rm = T),
+                 gyro_z_Dec_sd  = sd(gyro_z, na.rm = T),
+                 
+                 acc_x_Dec_max   = max(acc_x, na.rm = T),
+                 acc_y_Dec_max   = max(acc_y, na.rm = T),
+                 acc_z_Dec_max   = max(acc_z, na.rm = T),
+                 acc_xy_Dec_max  = max(acc_xy, na.rm = T),
+                 acc_xyz_Dec_max = max(acc_xyz, na.rm = T),
+                 gyro_x_Dec_max  = max(gyro_x, na.rm = T),
+                 gyro_y_Dec_max  = max(gyro_y, na.rm = T),
+                 gyro_z_Dec_max  = max(gyro_z, na.rm = T),
+                 
+                 acc_x_d1_Dec_mean   = mean(acc_x_d1, na.rm = T),
+                 acc_y_d1_Dec_mean   = mean(acc_y_d1, na.rm = T),
+                 acc_z_d1_Dec_mean   = mean(acc_z_d1, na.rm = T),
+                 acc_xy_d1_Dec_mean  = mean(acc_xy_d1, na.rm = T),
+                 acc_xyz_d1_Dec_mean = mean(acc_xyz_d1, na.rm = T),
+                 gyro_x_d1_Dec_mean  = mean(gyro_x_d1, na.rm = T),
+                 gyro_y_d1_Dec_mean  = mean(gyro_y_d1, na.rm = T),
+                 gyro_z_d1_Dec_mean  = mean(gyro_z_d1, na.rm = T),
+                 
+                 acc_x_d1_Dec_sd   = sd(acc_x_d1, na.rm = T),
+                 acc_y_d1_Dec_sd   = sd(acc_y_d1, na.rm = T),
+                 acc_z_d1_Dec_sd   = sd(acc_z_d1, na.rm = T),
+                 acc_xy_d1_Dec_sd  = sd(acc_xy_d1, na.rm = T),
+                 acc_xyz_d1_Dec_sd = sd(acc_xyz_d1, na.rm = T),
+                 gyro_x_d1_Dec_sd  = sd(gyro_x_d1, na.rm = T),
+                 gyro_y_d1_Dec_sd  = sd(gyro_y_d1, na.rm = T),
+                 gyro_z_d1_Dec_sd  = sd(gyro_z_d1, na.rm = T),
+                 
+                 acc_x_d1_Dec_max   = max(acc_x_d1, na.rm = T),
+                 acc_y_d1_Dec_max   = max(acc_y_d1, na.rm = T),
+                 acc_z_d1_Dec_max   = max(acc_z_d1, na.rm = T),
+                 acc_xy_d1_Dec_max  = max(acc_xy_d1, na.rm = T),
+                 acc_xyz_d1_Dec_max = max(acc_xyz_d1, na.rm = T),
+                 gyro_x_d1_Dec_max  = max(gyro_x_d1, na.rm = T),
+                 gyro_y_d1_Dec_max  = max(gyro_y_d1, na.rm = T),
+                 gyro_z_d1_Dec_max  = max(gyro_z_d1, na.rm = T)), bookingID]
+  
+  rm(DTSubset)
+  
+  ## Merge the tables
+  
+  setkey(DT1, bookingID)
+  setkey(DT2, bookingID)
+  setkey(DT3, bookingID)
+  setkey(DT4, bookingID)
+  setkey(DT5, bookingID)
+  setkey(DT6, bookingID)
+  setkey(DT7, bookingID)
+  
+  DT1 <- DT2[DT1]
+  DT1 <- DT3[DT1]
+  DT1 <- DT4[DT1]
+  DT1 <- DT5[DT1]
+  DT1 <- DT6[DT1]
+  DT1 <- DT7[DT1]
+  
+  DT <- rbind(DT, DT1)
+  
+}
+
+# Merge with the labels of dangerous driving
+
+setkey(DT, bookingID)
+setkey(DTLabel, bookingID)
+DT <- DTLabel[DT]
+
+load("Output/FinalModel.RData")
+
+DTM <- as.matrix(DT)
+DTM <- DTM[, importance_matrix[1:80, Feature]]
+
+DT[, Results := predict(FinalModel, DTM)]
+AUROC(DT[, label], DT[, Results]) 

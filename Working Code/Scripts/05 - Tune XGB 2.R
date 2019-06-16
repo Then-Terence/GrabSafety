@@ -33,7 +33,6 @@ xgb <- xgboost(XTrain, label = YTrain,
 # Compute feature importance
 importance_matrix <- xgb.importance(names(XTrain), model = xgb)
 
-
 # Tune for the number of features to be used
 ## CV for Number of Features
 
@@ -83,12 +82,12 @@ FinalModel <- xgboost(XTrain, label = YTrain,
                       nrounds = 85, params = params)
 
 TrainDT[, Results := predict(FinalModel, XTrain)]
-AUROC(TrainDT[, label], TrainDT[, Results]) # 0.8566438
+AUROC(TrainDT[, label], TrainDT[, Results]) # 0.8603466
 
 TestDT[, Results := predict(FinalModel, XTest)]
-AUROC(TestDT[, label], TestDT[, Results]) # 0.7181272
+AUROC(TestDT[, label], TestDT[, Results]) # 0.7160216
 PlotROC(TestDT[, label], TestDT[, Results], col = "blue", lwd = 2,
-        main = "Area Under the Curve of 0.7181")
+        main = "Area Under the Curve of 0.7160")
 abline(0, 1)
 
 save.image(file = "Output/FinalModel.RData")

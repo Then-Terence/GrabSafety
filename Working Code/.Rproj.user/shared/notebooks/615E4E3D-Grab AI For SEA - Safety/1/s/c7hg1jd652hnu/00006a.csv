@@ -1,0 +1,4 @@
+"0","X <- seq(0, 10, 0.01)"
+"0","Y <- sin(X) + 2"
+"0",""
+"0","plot(X, Y, xlab = ""Time"", ylab = ""Speed"", type = ""l"", lwd = 2)"

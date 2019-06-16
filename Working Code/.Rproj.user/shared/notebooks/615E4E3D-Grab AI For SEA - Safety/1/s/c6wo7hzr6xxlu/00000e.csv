@@ -1,0 +1,2 @@
+"0","ggplot(data = test_ss) +"
+"0","  geom_line(aes(x = iteration, y = value, color = variable))"

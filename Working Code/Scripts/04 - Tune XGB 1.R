@@ -20,11 +20,11 @@ XTest <-
 
 ## Candidates for parameters ##
 eta = seq(0.05, 0.25, 0.05)  # eta
-md = seq(2, 10, 2)           # maximum depth
+md = seq(2, 5, 1)           # maximum depth
 ss = seq(0.25, 1, 0.25)      # subsample
 cs = seq(0.25, 1, 0.25)      # colsample_by_tree
 
-cv.nround <- 200
+cv.nround <- 100
 
 #### CV for eta ####
 set.seed(123)
@@ -35,7 +35,7 @@ colnames(test_eta) = paste0("eta", eta)
 for(i in 1:length(eta)){
   
   params <- list(eta = eta[i], objective = "binary:logistic",
-                 eval_metric = "auc", eta = 0.2)
+                 eval_metric = "auc")
   
   CVModel <- xgb.cv(data = XTrain, label = YTrain, params = params,
                     nfold = 5, nrounds = cv.nround,
@@ -59,8 +59,7 @@ colnames(test_md) = paste0("md", md)
 for(i in 1:length(md)){
   
   params <- list(max_depth = md[i], objective = "binary:logistic",
-                 eval_metric = "auc",
-                 eta = 0.2)
+                 eval_metric = "auc")
   
   CVModel <- xgb.cv(data = XTrain, label = YTrain, params = params,
                     nfold = 5, nrounds = cv.nround,
@@ -84,7 +83,7 @@ colnames(test_ss) = paste0("ss", ss)
 for(i in 1:length(ss)){
   
   params <- list(subsample = ss[i], objective = "binary:logistic",
-                 eval_metric = "auc", eta = 0.2)
+                 eval_metric = "auc")
   
   CVModel <- xgb.cv(data = XTrain, label = YTrain, params = params,
                     nfold = 5, nrounds = cv.nround,
@@ -108,7 +107,7 @@ colnames(test_cs) = paste0("cs", cs)
 for(i in 1:length(cs)){
   
   params <- list(colsample_by_tree = cs[i], objective = "binary:logistic",
-                 eval_metric = "auc", eta = 0.2)
+                 eval_metric = "auc")
   
   CVModel <- xgb.cv(data = XTrain, label = YTrain, params = params,
                     nfold = 5, nrounds = cv.nround,

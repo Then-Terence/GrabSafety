@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1560718840336.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "1539B014",
+    "lastKnownWriteTime" : 1560722593,
+    "last_content_update" : 1560722593968,
+    "path" : "~/AI for SEA (Grab)/Working Code/Scripts/04 - Tune XGB 1.R",
+    "project_path" : "Scripts/04 - Tune XGB 1.R",
+    "properties" : {
+        "cursorPosition" : "125,0",
+        "scrollLine" : "110"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

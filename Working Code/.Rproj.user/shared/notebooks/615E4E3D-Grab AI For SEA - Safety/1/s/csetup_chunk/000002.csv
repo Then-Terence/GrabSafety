@@ -1,0 +1,6 @@
+"0","knitr::opts_chunk$set(echo = FALSE)"
+"0","options(error = recover)"
+"0","library(knitr)"
+"0","library(ggplot2)"
+"0","library(data.table)"
+"0","library(LiteXploreR)"

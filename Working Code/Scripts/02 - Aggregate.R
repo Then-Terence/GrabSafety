@@ -250,15 +250,15 @@ for(i in 1:N){
   # DT for Stop End
   DT5 <- DTSubset[(Stop_end == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
   
-  DT5 <- DT5[, .(Speed_Lg1_SE_mean = mean(Speed_Lg1, na.rm = T),
-                 Speed_Lg2_SE_mean = mean(Speed_Lg2, na.rm = T),
-                 Speed_Lg3_SE_mean = mean(Speed_Lg3, na.rm = T),
-                 Speed_Lg1_SE_sd   = sd(Speed_Lg1, na.rm = T),
-                 Speed_Lg2_SE_sd   = sd(Speed_Lg2, na.rm = T),
-                 Speed_Lg3_SE_sd   = sd(Speed_Lg3, na.rm = T),
-                 Speed_Lg1_SE_max  = max(Speed_Lg1, na.rm = T),
-                 Speed_Lg2_SE_max  = max(Speed_Lg2, na.rm = T),
-                 Speed_Lg3_SE_max  = max(Speed_Lg3, na.rm = T)), bookingID]
+  DT5 <- DT5[, .(Speed_Ld1_SE_mean = mean(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_SE_mean = mean(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_SE_mean = mean(Speed_Ld3, na.rm = T),
+                 Speed_Ld1_SE_sd   = sd(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_SE_sd   = sd(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_SE_sd   = sd(Speed_Ld3, na.rm = T),
+                 Speed_Ld1_SE_max  = max(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_SE_max  = max(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_SE_max  = max(Speed_Ld3, na.rm = T)), bookingID]
   
   # DT for Accelerating
   DT6 <- DTSubset[(Acc == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
