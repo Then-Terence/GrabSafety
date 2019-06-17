@@ -266,8 +266,9 @@ be combined into a new field. For the purpose of brevity, I have used
 
 We have computed the following new fields:
 
-acc\_xy = sqrt((acc\_x) ^ 2 + (acc\_y) ^ 2) acc\_xyz = sqrt((acc\_x) ^ 2
-+ (acc\_y) ^ 2 + (acc\_z) ^ 2)
+acc\_xy = sqrt((acc\_x) ^ 2 + (acc\_y) ^ 2)
+
+acc\_xyz = sqrt((acc\_x) ^ 2 + (acc\_y) ^ 2 + (acc\_z) ^ 2)
 
 The acceleration for the plane xy and xyz can be computed by the
 formulas above, by the virtue of Pythagoras’ Theorem.
@@ -283,7 +284,9 @@ and gyrometer reading, I have taken the first difference of the value.
 
 For example:
 
-At time t - 1, acc\_x = 0.2m/s2 At time t, acc\_x = 0.5m/s2
+At time t - 1, acc\_x = 0.2m/s2
+
+At time t, acc\_x = 0.5m/s2
 
 At time t, the first difference of acc\_x = (0.5m/s2 - 0.2m/s2) / (1s) =
 0.3m/s3
