@@ -12,9 +12,12 @@ This .RData file contains the details of the XGBoost model that has been trained
 
 ## Folder "Output"
 
-I have created an empty folder "Output" to store some intermediate results between running the scripts required to evaluate the model. Inside there, is another empty folder "Pieces" for which the script "Evaluate 02.R" is coded to use for storing some small pieces of intermediate results. This is necessary when the data is big and the memory available is limited.
+This is an empty "Output" to store some intermediate results between running the scripts required to evaluate the model.
+
+Inside there, is another empty folder "Pieces" for which the script "Evaluate 02.R" is coded to use for storing some small pieces of intermediate results. This is necessary when the data is big and the memory available is limited.
 
 ## Script "Evaluate 01.R"
+
 The script "Evaluate 01.R" reads in data files for telematics and label data, and save as .RData files for faster subsequent loading.
 
 ## Script "Evaluate 02.R"
