@@ -1,48 +1,34 @@
 
+#### Setup ####
+
 rm(list = ls(all.names = T)); gc()
 
 library(data.table)
 library(bit64)
 
-source("Scripts/Helpers.R")
+source("Helpers.R")
 
-# Pointing at the directory of the files
-FileFeature <- list.files("Data/features/", ".csv", full.names = T)
-FileLabel <- list.files("Data/labels/", ".csv", full.names = T)
-
-DTLabel <- fread(FileLabel)
-# Aggregate based on maximum, ie giving a label 1 if there is at least one label of 1
-DTLabel <- DTLabel[, .(label = max(label)), bookingID]
-
-
-# Run a loop to combine all the feature files
-DTFeature <- data.table()
-
-for(i in 1:length(FileFeature)){
-  
-  DTFeature <- rbind(DTFeature, fread(FileFeature[i]))
-  gc()
-  
-}
+load("Output/DTFeature.RData")
 
 # List all the booking IDs
-# Split into 40 parts
-# Only process 500 booking IDs at once
+# Split into N parts
 # To deal with memory constraints
-# Save the 40 aggregated data sets as .RData files
+# Save the N aggregated data sets as .RData files
+
+# I have used N for modelling, it can be 10, 5 or even smaller
+# It depends on how much the memory can handle allocation of vector
+# and to facilitate aggregation
 
 AllID <- unique(DTFeature[, bookingID])
 
 N <- 40
 
-DT <- data.table()
+Start <- round(seq(0, length(AllID), length.out = N + 1)[-(N + 1)]) + 1
+Stop <- round(seq(0, length(AllID), length.out = N + 1)[-1])
 
 for(i in 1:N){
   
-  Start <- 1 + (length(AllID) * (i - 1) / N)
-  Stop  <- (length(AllID) * i / N)
-  
-  SelectedID <- AllID[Start:Stop]
+  SelectedID <- AllID[Start[i]:Stop[i]]
   
   DTSubset <- DTFeature[bookingID %in% SelectedID, ]
   DTFeature <- DTFeature[!bookingID %in% SelectedID, ]
@@ -267,15 +253,15 @@ for(i in 1:N){
   # DT for Stop End
   DT5 <- DTSubset[(Stop_end == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
   
-  DT5 <- DT5[, .(Speed_Lg1_SE_mean = mean(Speed_Lg1, na.rm = T),
-                 Speed_Lg2_SE_mean = mean(Speed_Lg2, na.rm = T),
-                 Speed_Lg3_SE_mean = mean(Speed_Lg3, na.rm = T),
-                 Speed_Lg1_SE_sd   = sd(Speed_Lg1, na.rm = T),
-                 Speed_Lg2_SE_sd   = sd(Speed_Lg2, na.rm = T),
-                 Speed_Lg3_SE_sd   = sd(Speed_Lg3, na.rm = T),
-                 Speed_Lg1_SE_max  = max(Speed_Lg1, na.rm = T),
-                 Speed_Lg2_SE_max  = max(Speed_Lg2, na.rm = T),
-                 Speed_Lg3_SE_max  = max(Speed_Lg3, na.rm = T)), bookingID]
+  DT5 <- DT5[, .(Speed_Ld1_SE_mean = mean(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_SE_mean = mean(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_SE_mean = mean(Speed_Ld3, na.rm = T),
+                 Speed_Ld1_SE_sd   = sd(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_SE_sd   = sd(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_SE_sd   = sd(Speed_Ld3, na.rm = T),
+                 Speed_Ld1_SE_max  = max(Speed_Ld1, na.rm = T),
+                 Speed_Ld2_SE_max  = max(Speed_Ld2, na.rm = T),
+                 Speed_Ld3_SE_max  = max(Speed_Ld3, na.rm = T)), bookingID]
   
   # DT for Accelerating
   DT6 <- DTSubset[(Acc == 1 & Anomaly1 == 0 & Anomaly2 == 0), ]
@@ -410,20 +396,23 @@ for(i in 1:N){
   DT1 <- DT6[DT1]
   DT1 <- DT7[DT1]
   
-  DT <- rbind(DT, DT1)
+  # Save as .RData files
+  Number <- as.character(i)
+  
+  if(nchar(Number) == 1){
+    
+    Number <- paste0("0", Number)
+    
+  }
+  
+  Name <- paste0("Output/Pieces/", Number, ".RData")
+  
+  save(DT1, file = Name)
+  
+  gc()
+  
+  # To check the progress of the loop
+  print(i)
   
 }
 
-# Merge with the labels of dangerous driving
-
-setkey(DT, bookingID)
-setkey(DTLabel, bookingID)
-DT <- DTLabel[DT]
-
-load("Output/FinalModel.RData")
-
-DTM <- as.matrix(DT)
-DTM <- DTM[, importance_matrix[1:80, Feature]]
-
-DT[, Results := predict(FinalModel, DTM)]
-AUROC(DT[, label], DT[, Results]) 
